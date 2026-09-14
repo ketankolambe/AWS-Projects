@@ -1,0 +1,36 @@
+import boto3
+
+ec2 = boto3.client('ec2')
+
+def lambda_handler(event, context):
+
+    action = event.get("action")
+
+    response = ec2.describe_instances(
+        Filters=[
+            {
+                'Name': 'tag:AutoSchedule',
+                'Values': ['true']
+            }
+        ]
+    )
+
+    instance_ids = []
+
+    for reservation in response['Reservations']:
+        for instance in reservation['Instances']:
+            instance_ids.append(instance['InstanceId'])
+
+    if not instance_ids:
+        return {"message": "No instances found"}
+
+    if action == "start":
+        ec2.start_instances(InstanceIds=instance_ids)
+        return {"message": f"Started {instance_ids}"}
+
+    elif action == "stop":
+        ec2.stop_instances(InstanceIds=instance_ids)
+        return {"message": f"Stopped {instance_ids}"}
+
+    else:
+        return {"error": "Invalid action"}
