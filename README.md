@@ -216,7 +216,7 @@ Through this project, I practiced:
 
 ## 👨‍💻 Author
 
-**Devendra**
+**Ketan Kolambe**
 
 Cloud / DevOps Enthusiast
 
